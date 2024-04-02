@@ -4,33 +4,45 @@ const firstName = document.getElementById("firstname");
 const lastname = document.getElementById("lastname");
 const address = document.getElementById("address");
 const signupBtn = document.getElementById("signup");
-
 const maxLength = 250;
 const warnLength = 10;
 const charCount = document.getElementById("charCount");
+
 charCount.textContent = `${maxLength}/${maxLength}`;
+
+function scrollElementsIntoView(input) {
+  input.scrollIntoView({ behaviour: "smooth", block: "center"});
+}
 
 function validateForm(e) {
   e.preventDefault();
   const inputs = [...formElement.querySelectorAll("input, textarea")];
   for (const input of inputs) {
     const inputLabel = input.parentElement.querySelector("label").innerText;
-
     if (input.type === "text") {
       if (input.value.trim().length === 0) {
         alert(`Enter ${inputLabel}`);
+        setTimeout(() => scrollElementsIntoView(input), 100);
+        input.focus();
+        return;
+      }
+      if (!/^[a-zA-Z]+$/.test(input.value.trim())) {
+        alert(`${inputLabel} should contain only characters.`);
+        setTimeout(() => scrollElementIntoView(input), 100);
         input.focus();
         return;
       }
       if (input.id === "firstname") {
         if (input.value.trim().length < 3) {
           alert(`${inputLabel} should be at least 3 characters.`);
+          setTimeout(() => scrollElementsIntoView(input), 100);
           input.focus();
           return;
         }
       }
       if (input.value.trim().length > 16) {
         alert(`${inputLabel} cannot exceed 16 characters`);
+        setTimeout(() => scrollElementsIntoView(input), 100);
         input.focus();
         return;
       }
@@ -38,58 +50,75 @@ function validateForm(e) {
     if (input.type === "password") {
       if (input.value.trim().length === 0) {
         alert(`Enter ${inputLabel}`);
+        setTimeout(() => scrollElementsIntoView(input), 100);
         input.focus();
         return;
       }
       if (input.value.trim().length > 12) {
         alert(`${inputLabel} cannot exceed 12 characters`);
+        setTimeout(() => scrollElementsIntoView(input), 100);
         input.focus();
         return;
       }
       if (input.value.trim().length < 3) {
         alert(`${inputLabel} cannot be less than 3 characters`);
+        setTimeout(() => scrollElementsIntoView(input), 100);
         input.focus();
         return;
       }
     }
     if (input.type === "email") {
+      input.scrollIntoView({ behaviour: "smooth", block: "nearest"});
       const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       const validEmail = regex.test(input.value);
 
       if (input.value.trim().length === 0) {
         alert(`Enter ${inputLabel}`);
-        input.focus();
-        return;
-      }
-      if (input.value.trim().length > 20) {
-        alert(`${inputLabel} cannot exceed 20 characters`);
+        setTimeout(() => scrollElementsIntoView(input), 100);
         input.focus();
         return;
       }
       if (input.value.trim().length < 3) {
         alert(`${inputLabel} cannot be less than 3 characters`);
+        setTimeout(() => scrollElementsIntoView(input), 100);
         input.focus();
         return;
       }
       if (!validEmail) {
         alert(`Enter a valid ${inputLabel}`);
+        setTimeout(() => scrollElementsIntoView(input), 100);
         input.focus();
         return;
       }
     }
     if (input.type === "textarea") {
+      input.scrollIntoView({ behaviour: "smooth", block: "nearest"});
+      const characterRegex = /[a-zA-Z]/;
+      const numberRegex = /[0-9]/;
+      if (
+        !characterRegex.test(input.value.trim()) ||
+        !numberRegex.test(input.value.trim())
+      ) {
+        alert(`Enter ${inputLabel} with both characters and numbers.`);
+        setTimeout(() => scrollElementIntoView(input), 100);
+        input.focus();
+        return;
+      }
       if (input.value.trim().length === 0) {
         alert(`Enter ${inputLabel}`);
+        setTimeout(() => scrollElementsIntoView(input), 100);
         input.focus();
         return;
       }
       if (input.value.trim().length > 150) {
         alert(`${inputLabel} cannot exceed 150 characters`);
+        setTimeout(() => scrollElementsIntoView(input), 100);
         input.focus();
         return;
       }
       if (input.value.trim().length < 15) {
         alert(`${inputLabel} cannot be less than 15 characters`);
+        setTimeout(() => scrollElementsIntoView(input), 100);
         input.focus();
         return;
       }
@@ -104,6 +133,7 @@ function validateForm(e) {
   }
   alert("Signup Success");
   formElement.reset();
+  window.location.href = "index.html";
 }
 
 signupBtn.addEventListener("click", validateForm);
@@ -119,6 +149,5 @@ address.addEventListener("input", function () {
   if (remainingChars <= 0) {
     address.value = address.value.slice(0, maxLength);
   }
-
   charCount.textContent = `${Math.max(remainingChars, 0)}/${maxLength}`;
 });
